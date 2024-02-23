@@ -1,9 +1,12 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import { Schema } from 'mongoose';
 
 @Injectable()
 export class PostsService {
+  private posts: Schema[] = [];
   constructor(@InjectModel('Post') private readonly postModel: Model<any>) {}
 
   async getAllPosts(): Promise<any[]> {
@@ -15,16 +18,27 @@ export class PostsService {
   }
 
   async createPost(postData: any): Promise<any> {
+    const newPost = new this.postModel({
+      id: uuidv4(),
+      title: postData.title,
+      content: postData.content,
+    });
     try {
-      const createdPost = new this.postModel(postData);
-      return await createdPost.save();
-    } catch (error: any) {
-      throw new InternalServerErrorException(error.message);
+      return await newPost.save();
+    } catch (error) {
+      throw new BadRequestException(error);
     }
   }
 
   async updatePost(id: string, postData: any): Promise<any | null> {
-    // Implementa el método de actualización si es necesario
+    const postIndex = this.postModel.findById((posts) => post.id === id);
+    if (postIndex === -1) {
+      throw new NotFoundException('Post not found');
+    }
+
+    this.posts[postIndex] = { ...this.posts[postIndex], ...postData };
+
+    return this.posts[postIndex]; // Implementa el método de actualización si es necesario
   }
 
   async deletePost(id: string): Promise<void> {
