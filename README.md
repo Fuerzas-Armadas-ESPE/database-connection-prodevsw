@@ -1,3 +1,6 @@
+# Nota: se sigue presentando el error de la creacion de los post en la DB:test, se presume que se han creado dos instancias de mongo
+# por lo que se debe revisar la configuracion. Los servicios ahora funcionan en el puerto 44004. El CRUD funciona de manera correcta
+
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/beGrFWyM)
 # Blog Personal Nest
 

@@ -1,6 +1,8 @@
 // request-log.model.ts
 import * as mongoose from 'mongoose';
 
+
+
 export const RequestLogSchema = new mongoose.Schema({
   method: String,
   path: String,
@@ -10,6 +12,7 @@ export const RequestLogSchema = new mongoose.Schema({
 export interface RequestLogModel extends mongoose.Document {
   method: string;
   path: string;
+  
   // ... otras propiedades ...
 }
 
