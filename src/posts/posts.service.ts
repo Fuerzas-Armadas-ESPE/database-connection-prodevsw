@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable,NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -11,7 +11,11 @@ export class PostsService {
   }
 
   async getPost(id: string): Promise<any | null> {
-    return await this.postModel.findById(id).exec();
+    const post = await this.postModel.findById(id).exec();
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
   }
 
   async createPost(postData: any): Promise<any> {
@@ -24,10 +28,27 @@ export class PostsService {
   }
 
   async updatePost(id: string, postData: any): Promise<any | null> {
-    // Implementa el método de actualización si es necesario
+    const existingPost = await this.postModel.findById(id).exec();
+    if (!existingPost) {
+      throw new NotFoundException('Post not found');
+    }
+    try {
+      await this.postModel.findByIdAndUpdate(id, postData).exec();
+      return await this.postModel.findById(id).exec();
+    } catch (error: any) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   async deletePost(id: string): Promise<void> {
-    // Implementa el método de eliminación si es necesario
+    const existingPost = await this.postModel.findById(id).exec();
+    if (!existingPost) {
+      throw new NotFoundException('Post not found');
+    }
+    try {
+      await this.postModel.findByIdAndDelete(id).exec();
+    } catch (error: any) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 }
